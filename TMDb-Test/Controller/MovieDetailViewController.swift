@@ -35,7 +35,6 @@ class MovieDetailViewController: UIViewController {
         view.backgroundColor = UIColor.backgroundColor
         
         posterImage.translatesAutoresizingMaskIntoConstraints = false
-//        posterImage.frame = CGRect(x: 15, y: 20, width: 200, height: 300)
         view.addSubview(posterImage)
         if let posterPath = movie?.poster_path {
             let loadPath = "https://image.tmdb.org/t/p/w500/" + posterPath

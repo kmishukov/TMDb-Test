@@ -125,7 +125,7 @@
                                         <color key="tintColor" red="0.01176470588" green="0.82352941180000006" blue="0.46663915789999999" alpha="1" colorSpace="calibratedRGB"/>
                                         <color key="textColor" red="0.01176470588" green="0.82352941180000006" blue="0.46663915789999999" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" spellCheckingType="no" keyboardType="webSearch"/>
                                         <connections>
                                             <action selector="textFieldDidChange:" destination="ESr-4h-pW6" eventType="editingChanged" id="Tsq-YJ-pmc"/>
                                         </connections>
@@ -146,7 +146,7 @@
                                 <rect key="frame" x="0.0" y="108" width="375" height="559"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="160" id="fWU-7I-Umz" customClass="TopRatedMovieCell" customModule="TMDb_Test" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="160" id="fWU-7I-Umz" customClass="MovieCell" customModule="TMDb_Test" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="160"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fWU-7I-Umz" id="jIJ-cf-D3j">

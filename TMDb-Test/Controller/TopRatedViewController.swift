@@ -118,7 +118,7 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
         customSearchBar.layer.borderColor = UIColor.textColor.cgColor
         customSearchBar.layer.cornerRadius = 5
         customSearchBar.setClearButtonColor(color: UIColor.textColor)
-        customSearchBar.attributedPlaceholder = NSAttributedString(string: "Search..", attributes: [NSAttributedString.Key.foregroundColor: UIColor.textColor])
+        customSearchBar.attributedPlaceholder = NSAttributedString(string: "Search..", attributes: [NSAttributedString.Key.foregroundColor: UIColor(red: 0/255.0, green: 139/255.0, blue: 89/255.0, alpha: 1)])
         searchBarSuperView.setViewBottomBorderColor(color: UIColor.textColor, height: 1.0)
         
         cancelButton.alpha = 0
@@ -159,7 +159,7 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
                 
             } else {
                 
-                let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TopRatedMovieCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MovieCell
                 
                guard searchResultsArray.indices.contains(indexPath.row) else { print("searchResultsArray[indexPath.row] returned nil."); return cell }
                 
@@ -218,7 +218,7 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
                 
             } else {
                 
-                let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TopRatedMovieCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MovieCell
                 
                 guard moviesArray.indices.contains(indexPath.row) else { print("moviesArray[indexPath.row] returned nil."); return cell }
                 
@@ -321,7 +321,7 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
         self.perform(
             #selector(searchOnlineForTextField),
             with: customSearchBar,
-            afterDelay: 0.5)
+            afterDelay: 0.2)
     }
     
     
@@ -402,7 +402,9 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
                     DispatchQueue.main.async {
                         self.tableView.reloadData()
                     }
-                    return }
+                    return
+                }
+                
                 guard let currentPage = list?.page else { return }
                 guard let totalPages = list?.total_pages else { return }
                 guard let totalItems = list?.total_results else { return }

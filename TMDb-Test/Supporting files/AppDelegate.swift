@@ -105,7 +105,7 @@ extension String {
 
 extension UIView {
     func setViewBottomBorderColor(color: UIColor, height: CGFloat) {
-        let bottomBorderRect = CGRect(x: 0, y: frame.height - 1, width: frame.width, height: height)
+        let bottomBorderRect = CGRect(x: 0, y: frame.height - 1, width: frame.width + 100, height: height)
         let bottomBorderView = UIView(frame: bottomBorderRect)
         bottomBorderView.backgroundColor = color
         addSubview(bottomBorderView)
