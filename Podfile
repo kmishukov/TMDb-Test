@@ -5,9 +5,10 @@ target 'TMDb-Test' do
 
   use_frameworks!
 
-  pod 'SwiftyJSON', '~> 4.0'
-  pod 'RealmSwift'
-  pod 'NVActivityIndicatorView'
+	pod 'SwiftyJSON', '~> 4.0'
+	pod 'RealmSwift'
+	pod 'NVActivityIndicatorView'
+	pod 'FaveButton'
 
   target 'TMDb-TestTests' do
     inherit! :search_paths

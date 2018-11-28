@@ -9,23 +9,22 @@
 import UIKit
 import NVActivityIndicatorView
 
-class TopRatedViewController: UIViewController, UITableViewDelegate, UITableViewDataSource  {
+class TopRatedViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
+    @IBOutlet weak var customSearchBar: UITextField!
     @IBOutlet weak var tableView: UITableView!
     
     var totalItems: Int = 0
     var currentPage: Int = 0
     var totalPages: Int = 0
-    var moviesArray: [TopRatedMovie] = [] {
-        didSet {
-            print("moviesArray.count = \(moviesArray.count)")
-        }
-    }
-    
+    var moviesArray: [TopRatedMovie] = []
+    var searchResultsArray: [TopRatedMovie]  = []
+    var isSearching: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
+        configureSearchBar()
     }
     
     func configureView() {
@@ -38,14 +37,30 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.backgroundColor = UIColor.backgroundColor
         tableView.tableFooterView = UIView()
         
+        customSearchBar.delegate = self
+        
         let banner = UIImageView(image: UIImage(named: "banner"))
         banner.frame = CGRect(x: view.frame.size.width/2 - 100, y: -100, width: 200, height: 50)
         banner.contentMode = .scaleAspectFill
         tableView.addSubview(banner)
+    }
     
+    func configureSearchBar(){
+        customSearchBar.delegate = self
+        customSearchBar.returnKeyType = .search
+        customSearchBar.autocapitalizationType = .sentences
+        customSearchBar.tintColor = UIColor.textColor
+        customSearchBar.backgroundColor = UIColor.backgroundColor
+        customSearchBar.clearButtonMode = .always
+        customSearchBar.layer.borderWidth = 1
+        customSearchBar.layer.borderColor = UIColor.textColor.cgColor
+        customSearchBar.layer.cornerRadius = 5
+        customSearchBar.setClearButtonColor(color: UIColor.textColor)
+        customSearchBar.attributedPlaceholder = NSAttributedString(string: "Search..", attributes: [NSAttributedString.Key.foregroundColor: UIColor.textColor])
     }
     
     // MARK: - Table view data source
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -112,6 +127,19 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
         return 160
     }
     
+    // MARK: UITextField Delegates
+    
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        customSearchBar.resignFirstResponder()
+        customSearchBar.text = ""
+        customSearchBar.placeholder = "Search.."
+        return false
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        print("return from textfield!")
+        return true
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetails" {
@@ -150,6 +178,17 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
                 self.moviesArray = results
                 self.tableView.reloadData()
             }
+        }
+    }
+}
+extension UITextField {
+    func setClearButtonColor(color: UIColor) {
+        let clearButton = self.value(forKey: "_clearButton") as? UIButton
+        if (clearButton != nil) {
+            let image = UIImage(named: "clearButton")?.withRenderingMode(.alwaysTemplate)
+            clearButton?.setImage(image, for: .normal)
+            clearButton?.setImage(image, for: .highlighted)
+            clearButton?.tintColor = color
         }
     }
 }

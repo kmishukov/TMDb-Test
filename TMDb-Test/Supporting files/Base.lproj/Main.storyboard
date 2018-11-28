@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -97,8 +96,27 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bu8-R4-TtR">
+                                <rect key="frame" x="0.0" y="64" width="375" height="44"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search.." textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="UF3-xS-9cB">
+                                        <rect key="frame" x="8" y="7" width="359" height="30"/>
+                                        <color key="tintColor" red="0.01176470588" green="0.82352941180000006" blue="0.46663915789999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="0.01176470588" green="0.82352941180000006" blue="0.46663915789999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" red="0.031372549020000001" green="0.10980392160000001" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="ENx-Z8-9Ba"/>
+                                    <constraint firstAttribute="trailing" secondItem="UF3-xS-9cB" secondAttribute="trailing" constant="8" id="o8o-1Y-w9w"/>
+                                    <constraint firstItem="UF3-xS-9cB" firstAttribute="centerY" secondItem="Bu8-R4-TtR" secondAttribute="centerY" id="txm-07-rfl"/>
+                                    <constraint firstItem="UF3-xS-9cB" firstAttribute="leading" secondItem="Bu8-R4-TtR" secondAttribute="leading" constant="8" id="xfE-YQ-YFD"/>
+                                </constraints>
+                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ZLi-nn-a9h">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="108" width="375" height="559"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="160" id="fWU-7I-Umz" customClass="TopRatedMovieCell" customModule="TMDb_Test" customModuleProvider="target">
@@ -180,10 +198,13 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="ZLi-nn-a9h" firstAttribute="top" secondItem="hOc-ie-h9C" secondAttribute="top" id="1wT-VB-gaa"/>
                             <constraint firstItem="ZLi-nn-a9h" firstAttribute="bottom" secondItem="hOc-ie-h9C" secondAttribute="bottom" id="CEq-PV-bbl"/>
+                            <constraint firstItem="Bu8-R4-TtR" firstAttribute="trailing" secondItem="hOc-ie-h9C" secondAttribute="trailing" id="K8N-sK-8Cy"/>
+                            <constraint firstItem="ZLi-nn-a9h" firstAttribute="top" secondItem="Bu8-R4-TtR" secondAttribute="bottom" id="Q0v-Un-3iR"/>
                             <constraint firstItem="ZLi-nn-a9h" firstAttribute="leading" secondItem="Hnu-kI-CXH" secondAttribute="leading" id="RAz-bX-psf"/>
+                            <constraint firstItem="Bu8-R4-TtR" firstAttribute="top" secondItem="hOc-ie-h9C" secondAttribute="top" id="Uob-D5-IbA"/>
                             <constraint firstAttribute="trailing" secondItem="ZLi-nn-a9h" secondAttribute="trailing" id="ccu-EZ-9sk"/>
+                            <constraint firstItem="Bu8-R4-TtR" firstAttribute="leading" secondItem="hOc-ie-h9C" secondAttribute="leading" id="zO0-ek-rka"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="hOc-ie-h9C"/>
                     </view>
@@ -201,6 +222,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="customSearchBar" destination="UF3-xS-9cB" id="7wl-Gs-SaD"/>
                         <outlet property="searchDisplayController" destination="N9V-6K-hJ2" id="Y0R-yu-Vdg"/>
                         <outlet property="tableView" destination="ZLi-nn-a9h" id="hpx-ps-b4I"/>
                     </connections>
@@ -215,7 +237,7 @@
                     </connections>
                 </searchDisplayController>
             </objects>
-            <point key="canvasLocation" x="1087" y="27"/>
+            <point key="canvasLocation" x="1085.5999999999999" y="26.53673163418291"/>
         </scene>
         <!--Movie Detail View Controller-->
         <scene sceneID="0m9-Pu-brd">
@@ -258,6 +280,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="hbD-Vc-YeP"/>
+        <segue reference="oCs-UP-Ndg"/>
     </inferredMetricsTieBreakers>
 </document>
