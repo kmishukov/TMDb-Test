@@ -25,7 +25,7 @@ public class MovieObject: Object {
     @objc dynamic var overview = ""
     @objc dynamic var release_date = ""
  
-    convenience init(movie: TopRatedMovie) {
+    convenience init(movie: Movie) {
         self.init()
         vote_count = movie.vote_count ?? 0
         id = movie.id ?? 0

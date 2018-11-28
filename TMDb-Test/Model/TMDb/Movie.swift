@@ -1,5 +1,5 @@
 //
-//  TopRatedMovie.swift
+//  Movie.swift
 //  TMDb-Test
 //
 //  Created by Konstantin Mishukov on 25/11/2018.
@@ -10,7 +10,7 @@ import Foundation
 import SwiftyJSON
 import RealmSwift
 
-public struct TopRatedMovie {
+public struct Movie {
     var vote_count: Int?
     var id: Int?
     var video: Bool?

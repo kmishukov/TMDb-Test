@@ -11,7 +11,7 @@ import RealmSwift
 
 class MovieDetailViewController: UIViewController {
     
-    var movie: TopRatedMovie?
+    var movie: Movie?
     var realm = try! Realm()
     
     let posterImage = UIImageView()
@@ -22,29 +22,29 @@ class MovieDetailViewController: UIViewController {
     let rating = UILabel()
     let release_date = UILabel()
     let overview = UILabel()
-    let favouriteButton = UIButton(type: .system)
-
+    let favouriteButton = UIButton()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
         checkFavourites()
     }
     
-    // Весь User Interface написан программно
-    
     func configureView(){
         navigationController?.navigationBar.setBottomBorderColor(color: UIColor.textColor, height: 1.0)
         view.backgroundColor = UIColor.backgroundColor
         
-        
-        posterImage.frame = CGRect(x: 15, y: 20, width: 200, height: 300)
+        posterImage.translatesAutoresizingMaskIntoConstraints = false
+//        posterImage.frame = CGRect(x: 15, y: 20, width: 200, height: 300)
         view.addSubview(posterImage)
         if let posterPath = movie?.poster_path {
             let loadPath = "https://image.tmdb.org/t/p/w500/" + posterPath
-            posterImage.loadImage(fromURL: loadPath, indicatorType: .ballTrianglePath)
-            
+            posterImage.loadImageFromUrl(fromURL: loadPath, indicatorType: .ballTrianglePath)
         }
-        
+        posterImage.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
+        posterImage.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
+        posterImage.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4).isActive = true
+        posterImage.heightAnchor.constraint(equalTo: posterImage.widthAnchor, multiplier: 1.5).isActive = true
         
         maintitle.translatesAutoresizingMaskIntoConstraints = false
         maintitle.textColor = UIColor.textColor
@@ -55,7 +55,6 @@ class MovieDetailViewController: UIViewController {
         maintitle.topAnchor.constraint(equalTo: posterImage.topAnchor, constant: 0).isActive = true
         maintitle.leftAnchor.constraint(equalTo: posterImage.rightAnchor, constant: 10).isActive = true
         maintitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
-        
         
         origTitle.translatesAutoresizingMaskIntoConstraints = false
         origTitle.textColor = UIColor.textColor
@@ -68,7 +67,6 @@ class MovieDetailViewController: UIViewController {
         origTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         
         let boldTextAttribute = [ NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16) ]
-        
         
         genre.translatesAutoresizingMaskIntoConstraints = false
         genre.textColor = UIColor.textColor
@@ -87,7 +85,6 @@ class MovieDetailViewController: UIViewController {
         genre.topAnchor.constraint(equalTo: origTitle.bottomAnchor, constant: 15).isActive = true
         genre.leftAnchor.constraint(equalTo: posterImage.rightAnchor, constant: 10).isActive = true
         genre.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
-        
        
         popularity.translatesAutoresizingMaskIntoConstraints = false
         popularity.textColor = UIColor.textColor
@@ -106,7 +103,6 @@ class MovieDetailViewController: UIViewController {
         popularity.leftAnchor.constraint(equalTo: posterImage.rightAnchor, constant: 10).isActive = true
         popularity.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         
-        
         rating.translatesAutoresizingMaskIntoConstraints = false
         rating.textColor = UIColor.textColor
         rating.numberOfLines = 0
@@ -123,7 +119,6 @@ class MovieDetailViewController: UIViewController {
         rating.topAnchor.constraint(equalTo: popularity.bottomAnchor, constant: 0).isActive = true
         rating.leftAnchor.constraint(equalTo: posterImage.rightAnchor, constant: 10).isActive = true
         rating.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
-        
         
         release_date.translatesAutoresizingMaskIntoConstraints = false
         release_date.textColor = UIColor.textColor
@@ -142,6 +137,7 @@ class MovieDetailViewController: UIViewController {
         release_date.topAnchor.constraint(equalTo: rating.bottomAnchor, constant: 0).isActive = true
         release_date.leftAnchor.constraint(equalTo: posterImage.rightAnchor, constant: 10).isActive = true
         release_date.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+        release_date.bottomAnchor.constraint(lessThanOrEqualTo: posterImage.bottomAnchor).isActive = true
         
         
         overview.translatesAutoresizingMaskIntoConstraints = false
@@ -155,7 +151,6 @@ class MovieDetailViewController: UIViewController {
         overview.leadingAnchor.constraint(equalTo: posterImage.leadingAnchor, constant: 0).isActive = true
         overview.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         
-        
         favouriteButton.translatesAutoresizingMaskIntoConstraints = false
         favouriteButton.setTitle("Set to Favourites", for: .normal)
         favouriteButton.setTitleColor(UIColor.textColor, for: .normal)
@@ -165,11 +160,12 @@ class MovieDetailViewController: UIViewController {
         favouriteButton.layer.cornerRadius = 5
         favouriteButton.addTarget(self, action: #selector(favouriteButtonPressed), for: .touchUpInside)
         view.addSubview(favouriteButton)
-        favouriteButton.centerYAnchor.constraint(equalTo: overview.bottomAnchor, constant: 75).isActive = true
         favouriteButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
         favouriteButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         favouriteButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
         favouriteButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50).isActive = true
+        favouriteButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant:-20).isActive = true
+        favouriteButton.topAnchor.constraint(greaterThanOrEqualTo: overview.bottomAnchor, constant: 20).isActive = true
     }
     
     func checkFavourites(){
@@ -194,20 +190,18 @@ class MovieDetailViewController: UIViewController {
                 guard let mov = movie else { return }
                 let movieObj = MovieObject(movie: mov)
                 realm.add(movieObj)
+                if let title = mov.title {
+                    print("Movie \(title)")
+                }
             }
-            UIView.animate(withDuration: 2) {
-                self.checkFavourites()
-            }
+            self.checkFavourites()
         default:
             guard let id = self.movie?.id else { print("Error: self.movie?.id returned nil."); return }
             let result = realm.objects(MovieObject.self).filter("id == \(id)")
             try! realm.write {
                 realm.delete(result)
             }
-            UIView.animate(withDuration: 2) {
-                self.checkFavourites()
-            }
+            self.checkFavourites()
         }
-       
     }
 }

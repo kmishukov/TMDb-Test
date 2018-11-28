@@ -38,10 +38,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+// Extensions храню в AppDelegate, при желании можно разобрать :)
+
 extension UIColor {
     static let textColor = UIColor(red: 3/255.0, green: 210/255.0, blue: 119/255.0, alpha: 1)
     static let backgroundColor = UIColor(red: 8/255.0, green: 28/255.0, blue: 36/255.0, alpha: 1)
-//    static let backgroundSelectedColor = UIColor(red: 8/255.0, green: 85/255.0, blue: 76/255.0, alpha: 1)
+    static let backgroundDeselectedColor = UIColor(red: 2/255.0, green: 97/255.0, blue: 55/255.0, alpha: 1)
 }
 
 extension UINavigationBar {
@@ -54,7 +56,7 @@ extension UINavigationBar {
 }
 
 extension UIImageView {
-    func loadImage(fromURL urlString: String, indicatorType: NVActivityIndicatorType) {
+    func loadImageFromUrl(fromURL urlString: String, indicatorType: NVActivityIndicatorType) {
         guard let url = URL(string: urlString) else {
             return
         }
@@ -77,7 +79,7 @@ extension UIImageView {
                 DispatchQueue.main.async {
                     self.image = image
                 }
-            }
+            } 
             }.resume()
     }
 }
@@ -95,9 +97,17 @@ extension String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
         guard let date = dateFormatter.date(from: self) else {
-            preconditionFailure("Take a look to your format")
+            return self
         }
         return date.asString(style: .long)
     }
 }
 
+extension UIView {
+    func setViewBottomBorderColor(color: UIColor, height: CGFloat) {
+        let bottomBorderRect = CGRect(x: 0, y: frame.height - 1, width: frame.width, height: height)
+        let bottomBorderView = UIView(frame: bottomBorderRect)
+        bottomBorderView.backgroundColor = color
+        addSubview(bottomBorderView)
+    }
+}

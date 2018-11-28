@@ -23,7 +23,7 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
     
         do {
             let realm = try Realm()
-            let stored = realm.objects(MovieObject.self)
+            let stored = realm.objects(MovieObject.self).sorted(byKeyPath: "title")
             storedArray = stored
         } catch {
             print(error)
@@ -94,7 +94,7 @@ class FavouritesViewController: UIViewController, UITableViewDelegate, UITableVi
         if segue.identifier == "showFavDetails" {
             if let index = tableView.indexPathForSelectedRow?.row, let storedarr = storedArray {
              let destination = segue.destination as! MovieDetailViewController
-                destination.movie = TopRatedMovie(mObject: storedarr[index])
+                destination.movie = Movie(mObject: storedarr[index])
             }
         }
     }

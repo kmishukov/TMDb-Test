@@ -38,6 +38,7 @@ class API {
 
 class HTTPRequest{
     class func request(_ url: String, parameter: String,  key: String, completionHandler: @escaping (_ data: Data?, _ response: URLResponse?, _ error: Error?) -> ()) -> (){
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         let apiKeyString = "api_key=" + key
         let urlString = url + "?" + apiKeyString + parameter
         let requestURL = URL(string: urlString)!
@@ -48,8 +49,10 @@ class HTTPRequest{
                 if error != nil{
                     print("Error -> \(String(describing: error))")
                     completionHandler(nil, nil, error as Error?)
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
                 }else{
                     completionHandler(data, response, nil)
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
                 }
             })
         })

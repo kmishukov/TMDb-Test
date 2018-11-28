@@ -14,11 +14,15 @@ let api = API()
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var logoVerticalConstraint: NSLayoutConstraint!
+    
     let titleLabel = UILabel()
+    let logoImage = UIImageView()
     let loginButton = UIButton(type: .system)
     let indicator = NVActivityIndicatorView(frame: CGRect(x: 200, y: 800, width: 50, height: 50), type: .circleStrokeSpin, color: UIColor.textColor)
     
-    var movieList: TopRatedList?
+    
+    var movieList: MovieList?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,12 +32,26 @@ class ViewController: UIViewController {
     func configureView() {
         view.backgroundColor = UIColor.backgroundColor
         
+//        logoImage.translatesAutoresizingMaskIntoConstraints = false
+//        logoImage.image = UIImage(named: "movieDbLogo")
+////        logoImage.frame = CGRect(x: 0, y: 0, width: 150, height: 150)
+//        logoImage.center = view.center
+//        logoImage.contentMode = .scaleAspectFit
+//        view.addSubview(logoImage)
+//        logoImage.widthAnchor.constraint(equalToConstant: 150).isActive = true
+//        logoImage.heightAnchor.constraint(equalToConstant: 150).isActive = true
+//        logoImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+//        logoImage.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0).isActive = true
+        
+        
         // UILabel: TMDb Test
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = "TMDb Test"
-        
+        titleLabel.text = "TMDd-Test\nby Mishukov Konstantin"
+        titleLabel.numberOfLines = 0
+        titleLabel.textAlignment = .center
         view.addSubview(titleLabel)
         titleLabel.textColor? = UIColor.textColor
+        titleLabel.alpha = 0
         titleLabel.font = UIFont.systemFont(ofSize: 20)
         titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         titleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
@@ -41,7 +59,7 @@ class ViewController: UIViewController {
         // UIButton: Login as Guest
         loginButton.translatesAutoresizingMaskIntoConstraints = false
         loginButton.tintColor = UIColor.textColor
-        loginButton.setTitle("Top Rated", for: .normal)
+        loginButton.setTitle("Show Top Rated", for: .normal)
         loginButton.setTitleColor(UIColor.textColor, for: .normal)
         loginButton.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         loginButton.layer.borderWidth = 2
@@ -67,9 +85,18 @@ class ViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        UIView.animate(withDuration: 0.5, animations: {
-            self.loginButton.alpha = 1
-        })
+        self.logoVerticalConstraint.constant = -130
+        
+        UIView.animate(withDuration: 1, animations: {
+            self.view.layoutIfNeeded()
+        }) { (bool) in
+            UIView.animate(withDuration: 1, animations: {
+                self.loginButton.alpha = 1
+                self.titleLabel.alpha = 1
+            })
+        }
+  
+        
     }
     
     @objc func showTopRated() {
