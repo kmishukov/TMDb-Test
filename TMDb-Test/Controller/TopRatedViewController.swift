@@ -305,7 +305,6 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        searchOnlineForTextField()
         return true
     }
     
@@ -314,14 +313,23 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @IBAction func textFieldDidChange(_ sender: Any) {
+        if let text = customSearchBar.text {
+           updateSearchResults(text: text)
+        }
+    }
+    
+    var lastPerformedArgument: NSString? = nil
+    func updateSearchResults(text: String) {
+    
         NSObject.cancelPreviousPerformRequests(
             withTarget: self,
-            selector: #selector(searchOnlineForTextField),
-            object: customSearchBar)
+            selector: #selector(searchForMoviesWithText(text:)),
+            object: lastPerformedArgument)
+        self.lastPerformedArgument = text as NSString
         self.perform(
-            #selector(searchOnlineForTextField),
-            with: customSearchBar,
-            afterDelay: 0.2)
+            #selector(searchForMoviesWithText(text:)),
+            with: lastPerformedArgument,
+            afterDelay: 0.3)
     }
     
     
@@ -389,8 +397,9 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
     
     // API Search function that interacts with tableView
     
-    @objc func searchOnlineForTextField() {
-        if let text = customSearchBar.text {
+    @objc func searchForMoviesWithText(text: String) {
+//        if let text = customSearchBar.text {
+            print("API Search: \(text)")
             self.isSearching = true
             API.getSearchList(searchText: text, page: nil) { (apiReturn, list) in
                 
@@ -420,7 +429,7 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
                     self.tableView.reloadData()
                 }
             }
-        }
+//        }
     }
     
     @IBAction func cancelButtonPressed(_ sender: Any) {
