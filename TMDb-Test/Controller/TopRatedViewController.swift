@@ -83,13 +83,14 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
         configureSearchBar()
     }
     
+    // Update Cell that was previewed in Detail
     override func viewWillAppear(_ animated: Bool) {
         if let row = self.rowToUpdate {
-            let indexPath = IndexPath(row: row-1, section: 0)
+            let indexPath = IndexPath(row: row, section: 0)
             tableView.reloadRows(at: [indexPath], with: .none)
         }
     }
-    // ui
+    // UI Setup
     func configureView() {
         navigationController?.navigationBar.setBottomBorderColor(color: UIColor.textColor, height: 1.0)
         view.backgroundColor = UIColor.backgroundColor
@@ -106,7 +107,8 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.addSubview(banner)
         
     }
-    // ui searchbar
+    
+    // SearchBar UI
     func configureSearchBar(){
         customSearchBar.delegate = self
         customSearchBar.returnKeyType = .done
