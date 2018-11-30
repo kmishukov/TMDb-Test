@@ -112,6 +112,8 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
     func configureSearchBar(){
         customSearchBar.delegate = self
         customSearchBar.returnKeyType = .done
+        customSearchBar.keyboardType = .asciiCapable
+        customSearchBar.autocorrectionType = .no
         customSearchBar.autocapitalizationType = .sentences
         customSearchBar.tintColor = UIColor.textColor
         customSearchBar.backgroundColor = UIColor.backgroundColor
@@ -296,13 +298,22 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
     
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         customSearchBar.text = ""
-        customSearchBar.placeholder = "Search.."
         customSearchBar.becomeFirstResponder()
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.tableView.scroll(to: .top, animated: true)
         }
         return false
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let correctInput = NSCharacterSet(charactersIn:" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
+        let characterSetFromTextField = NSCharacterSet(charactersIn: string)
+        if correctInput.isSuperset(of: characterSetFromTextField as CharacterSet) {
+            return true
+        } else {
+            return false
+        }
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -400,7 +411,6 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
     // API Search function that interacts with tableView
     
     @objc func searchForMoviesWithText(text: String) {
-//        if let text = customSearchBar.text {
             print("API Search: \(text)")
             self.isSearching = true
             API.getSearchList(searchText: text, page: nil) { (apiReturn, list) in
@@ -431,7 +441,6 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
                     self.tableView.reloadData()
                 }
             }
-//        }
     }
     
     @IBAction func cancelButtonPressed(_ sender: Any) {
