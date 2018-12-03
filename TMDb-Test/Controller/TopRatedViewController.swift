@@ -181,34 +181,8 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
                     }
                 }
                 
-                if let title = movie.title {
-                    cell.titleLabel.textColor = UIColor.textColor
-                    cell.titleLabel.text = title
-                }
-                if let originalTitle = movie.original_title {
-                    cell.originalTitleLabel.textColor = UIColor.textColor
-                    cell.originalTitleLabel.text = originalTitle
-                }
-                
-                cell.posterImage.image = UIImage(named: "placeholder")
-                if let posterPath = movie.poster_path {
-                    let loadPath = "https://image.tmdb.org/t/p/w200/" + posterPath
-                    cell.posterImage.loadImageFromUrl(fromURL: loadPath, indicatorType: .ballSpinFadeLoader)
-                }
-                
-                if let overview = movie.overview {
-                    cell.overviewLabel.textColor = UIColor.textColor
-                    cell.overviewLabel.text = overview
-                }
-                
-                if let voteAvrg = movie.vote_average {
-                    cell.voteAverage.textColor = UIColor.textColor
-                    cell.voteAverage.text = "Rating: \(voteAvrg)"
-                }
-                
-                cell.selectionStyle = UITableViewCell.SelectionStyle.none
-                cell.backgroundColor = UIColor.backgroundColor
-                
+                cell.configure(movie: movie)
+
                 return cell
                 
             }
@@ -225,12 +199,12 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
                 let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MovieCell
                 
                 guard moviesArray.indices.contains(indexPath.row) else { print("moviesArray[indexPath.row] returned nil."); return cell }
-                
+
                 let movie = moviesArray[indexPath.row]
-                
+
                 cell.faveButton.addTarget(self, action: #selector(faveButtonPressed), for: .touchUpInside)
                 cell.faveButton.tag = indexPath.row
-                
+
                 if let id = movie.id {
                     if realm.objects(MovieObject.self).filter("id == \(id)").count == 0 {
                         cell.faveButton.setSelected(selected: false, animated: false)
@@ -238,40 +212,10 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
                         cell.faveButton.setSelected(selected: true, animated: false)
                     }
                 }
-                
-                if let title = movie.title {
-                    cell.titleLabel.textColor = UIColor.textColor
-                    cell.titleLabel.text = title
-                }
-                if let originalTitle = movie.original_title {
-                    cell.originalTitleLabel.textColor = UIColor.textColor
-                    cell.originalTitleLabel.text = originalTitle
-                }
-                
-                cell.posterImage.image = UIImage(named: "placeholder")
-                if let posterPath = movie.poster_path {
-                    let loadPath = "https://image.tmdb.org/t/p/w200/" + posterPath
-                    cell.posterImage.loadImageFromUrl(fromURL: loadPath, indicatorType: .ballSpinFadeLoader)
-                }
-                
-                if let overview = movie.overview {
-                    cell.overviewLabel.textColor = UIColor.textColor
-                    cell.overviewLabel.text = overview
-                }
-                
-                if let voteAvrg = movie.vote_average {
-                    cell.voteAverage.textColor = UIColor.textColor
-                    cell.voteAverage.text = "Rating: \(voteAvrg)"
-                }
-                
-                cell.selectionStyle = UITableViewCell.SelectionStyle.none
-                cell.backgroundColor = UIColor.backgroundColor
-                
+                cell.configure(movie: movie)
                 return cell
-        
             }
         }
-       
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -348,36 +292,6 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
     
     // MARK: FaveButton Delelgate
     
-    func faveButton(_ faveButton: FaveButton, didSelected selected: Bool) {
-         let index = faveButton.tag
-            switch selected {
-            case true:
-                var movieObj = MovieObject()
-                if isSearching {
-                    movieObj = MovieObject(movie: searchResultsArray[index])
-                } else {
-                    movieObj = MovieObject(movie: moviesArray[index])
-                }
-                try! realm.write {
-                            realm.add(movieObj)
-                            print("Movie \(movieObj.title) saved.")
-                    }
-            case false:
-                var id = ""
-                if isSearching {
-                    id = String(searchResultsArray[index].id!)
-                } else {
-                    id = String(moviesArray[index].id!)
-                    
-                }
-                let result = realm.objects(MovieObject.self).filter("id == \(id)")
-                try! realm.write {
-                    realm.delete(result)
-                    print("Object deleted.")
-                }
-            }
-    }
-    
     @objc func faveButtonPressed(sender: FaveButton) {
         let index = sender.tag
         switch sender.isSelected {
@@ -390,20 +304,26 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
             }
             try! realm.write {
                 realm.add(movieObj)
-                print("Movie \(movieObj.title) saved.")
+                print("Movie \"\(movieObj.title)\" saved to favorites.")
             }
         case false:
             var id = ""
             if isSearching {
-                id = String(searchResultsArray[index].id!)
+                if let movieID = searchResultsArray[index].id {
+                    id = String(movieID)
+                }
             } else {
-                id = String(moviesArray[index].id!)
-                
+                if let movieID = moviesArray[index].id {
+                    id = String(movieID)
+                }
             }
             let result = realm.objects(MovieObject.self).filter("id == \(id)")
-            try! realm.write {
-                realm.delete(result)
-                print("Object deleted.")
+            if result.count != 0 && id != "" {
+                let title = result[result.startIndex].title
+                try! realm.write {
+                    realm.delete(result)
+                    print("Object \"\(title)\' removed from favorites.")
+                }
             }
         }
     }
