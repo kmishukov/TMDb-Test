@@ -53,13 +53,13 @@ class CustomImageView: UIImageView {
                     let image = UIImage(data: data)
                     
                     if self.imageUrlString == urlString {
-                     self.image = image
+                        self.image = image
                     }
                     
                     imageCache.setObject(image!, forKey: urlString as AnyObject)
-
+                    
                 }
             }
-        }.resume()
+            }.resume()
     }
 }

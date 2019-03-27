@@ -12,7 +12,7 @@ import RealmSwift
 import FaveButton
 
 class TopRatedViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
-  
+    
     @IBOutlet weak var customSearchBar: UITextField!  // Handmade custom SearchBar :)
     @IBOutlet weak var searchBarTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var searchBarSuperView: UIView!
@@ -67,9 +67,8 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
                 }) { (completed) in
                     if completed {
                         DispatchQueue.main.async {
-                           
                             self.tableView.reloadSections(IndexSet(arrayLiteral: 0), with: .fade)
-                             self.tableView.scroll(to: .top, animated: true)
+                            self.tableView.scroll(to: .top, animated: true)
                         }
                     }
                 }
@@ -165,7 +164,7 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
                 
                 let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MovieCell
                 
-               guard searchResultsArray.indices.contains(indexPath.row) else { print("searchResultsArray[indexPath.row] returned nil."); return cell }
+                guard searchResultsArray.indices.contains(indexPath.row) else { print("searchResultsArray[indexPath.row] returned nil."); return cell }
                 
                 let movie = searchResultsArray[indexPath.row]
                 
@@ -182,13 +181,13 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
                 }
                 
                 cell.configure(movie: movie)
-
+                
                 return cell
                 
             }
             
         } else {
-        
+            
             if indexPath.row == self.moviesArray.count {
                 
                 let cell = tableView.dequeueReusableCell(withIdentifier: "loadingCell", for: indexPath) as! LoadingCell
@@ -199,12 +198,12 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
                 let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MovieCell
                 
                 guard moviesArray.indices.contains(indexPath.row) else { print("moviesArray[indexPath.row] returned nil."); return cell }
-
+                
                 let movie = moviesArray[indexPath.row]
-
+                
                 cell.faveButton.addTarget(self, action: #selector(faveButtonPressed), for: .touchUpInside)
                 cell.faveButton.tag = indexPath.row
-
+                
                 if let id = movie.id {
                     if realm.objects(MovieObject.self).filter("id == \(id)").count == 0 {
                         cell.faveButton.setSelected(selected: false, animated: false)
@@ -271,13 +270,13 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
     
     @IBAction func textFieldDidChange(_ sender: Any) {
         if let text = customSearchBar.text {
-           updateSearchResults(text: text)
+            updateSearchResults(text: text)
         }
     }
     
     var lastPerformedArgument: NSString? = nil
     func updateSearchResults(text: String) {
-    
+        
         NSObject.cancelPreviousPerformRequests(
             withTarget: self,
             selector: #selector(searchForMoviesWithText(text:)),
@@ -331,36 +330,36 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
     // API Search function that interacts with tableView
     
     @objc func searchForMoviesWithText(text: String) {
-            print("API Search: \(text)")
-            self.isSearching = true
-            API.getSearchList(searchText: text, page: nil) { (apiReturn, list) in
-                
-                guard let results = list?.results else {
-                    self.searchResultsArray = []
-                    self.currentPage = 0
-                    self.totalPages = 0
-                    self.totalItems = 0
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
-                    }
-                    return
-                }
-                
-                guard let currentPage = list?.page else { return }
-                guard let totalPages = list?.total_pages else { return }
-                guard let totalItems = list?.total_results else { return }
-                
-                self.currentPage = currentPage
-                self.totalPages = totalPages
-                self.totalItems = totalItems
-                
-                self.searchResultsArray = results
-                
+        print("API Search: \(text)")
+        self.isSearching = true
+        API.getSearchList(searchText: text, page: nil) { (apiReturn, list) in
+            
+            guard let results = list?.results else {
+                self.searchResultsArray = []
+                self.currentPage = 0
+                self.totalPages = 0
+                self.totalItems = 0
                 DispatchQueue.main.async {
-                    self.tableView.scroll(to: .top, animated: false)
                     self.tableView.reloadData()
                 }
+                return
             }
+            
+            guard let currentPage = list?.page else { return }
+            guard let totalPages = list?.total_pages else { return }
+            guard let totalItems = list?.total_results else { return }
+            
+            self.currentPage = currentPage
+            self.totalPages = totalPages
+            self.totalItems = totalItems
+            
+            self.searchResultsArray = results
+            
+            DispatchQueue.main.async {
+                self.tableView.scroll(to: .top, animated: false)
+                self.tableView.reloadData()
+            }
+        }
     }
     
     @IBAction func cancelButtonPressed(_ sender: Any) {
@@ -377,18 +376,18 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
                 self.rowToUpdate = selection
                 let destination = segue.destination as! MovieDetailViewController
                 if isSearching {
-                     destination.movie = searchResultsArray[selection]
+                    destination.movie = searchResultsArray[selection]
                 } else {
-                     destination.movie = moviesArray[selection]
+                    destination.movie = moviesArray[selection]
                 }
-               
+                
             }
         }
     }
     
     func loadMoreMovies(page: Int?) {
         API.getTopRatedList(page: page) { (apiReturn, list) in
-
+            
             guard let results = list?.results else { return }
             guard let currentPage = list?.page else { return }
             guard let totalPages = list?.total_pages else { return }
@@ -406,30 +405,30 @@ class TopRatedViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func searchMoreMovies(page: Int?) {
-        API.getSearchList(searchText: customSearchBar.text!, page: page) { (apiReturn, list) in
+        API.getSearchList(searchText: customSearchBar.text!, page: page) { [weak self = self] (apiReturn, list) in
             guard let results = list?.results else { return }
             guard let currentPage = list?.page else { return }
             guard let totalPages = list?.total_pages else { return }
             guard let totalItems = list?.total_results else { return }
             
-            self.currentPage = currentPage
-            self.totalPages = totalPages
-            self.totalItems = totalItems
-            self.searchResultsArray.append(contentsOf: results)
-
+            self?.currentPage = currentPage
+            self?.totalPages = totalPages
+            self?.totalItems = totalItems
+            self?.searchResultsArray.append(contentsOf: results)
+            
             DispatchQueue.main.async {
-                self.tableView.reloadData()
+                self?.tableView.reloadData()
             }
         }
     }
     
-// Обновление TopRatedMovieList TableView
+    // Обновление TopRatedMovieList TableView
     @IBAction func refreshButtonPressed(_ sender: Any) {
-        API.getTopRatedList(page: nil) { (apireturn, list) in
+        API.getTopRatedList(page: nil) { [weak self = self] (apireturn, list) in
             if let results = list?.results {
-                self.moviesArray = results
-                self.tableView.scroll(to: .top, animated: true)
-                self.tableView.reloadData()
+                self?.moviesArray = results
+                self?.tableView.scroll(to: .top, animated: true)
+                self?.tableView.reloadData()
             }
         }
     }

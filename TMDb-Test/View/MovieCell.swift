@@ -33,7 +33,7 @@ class MovieCell: UITableViewCell {
             posterImage.loadImageFromUrl(fromURL: loadPath, indicatorType: .ballBeat)
         }
         if let rating = movie.vote_average {
-            voteAverage.text = "Rating: \(rating))"
+            voteAverage.text = "Rating: \(rating)"
         }
     }
     

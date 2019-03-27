@@ -19,10 +19,6 @@ public struct apiReturn {
 class API {
     static let api_key = "10a3eb9a4936774dd45e7db6ccd6b6b4"
     
-//    static var genres: [Genre]?
-    
-
-    
     static func networkRequest(url: String, parameter: String, completion: @escaping (apiReturn)-> ()) -> () {
         var recieved = apiReturn()
         HTTPRequest.request(url, parameter: parameter, key: "10a3eb9a4936774dd45e7db6ccd6b6b4") { (data, response, error) in
